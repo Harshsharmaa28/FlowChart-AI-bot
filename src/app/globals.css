@@ -29,3 +29,46 @@ body {
   display: none;
 }
 
+@keyframes float1 {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes float2 {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-30px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.float-animate-1 {
+  animation: float1 12s infinite ease-in-out;
+}
+
+.float-animate-2 {
+  animation: float2 14s infinite ease-in-out;
+}
+
+.float-animate-3 {
+  animation: float1 16s infinite ease-in-out;
+}
+
+.float-animate-4 {
+  animation: float2 18s infinite ease-in-out;
+}
+
+.float-animate-5 {
+  animation: float1 20s infinite ease-in-out;
+}
