@@ -31,7 +31,7 @@ export default function Home() {
           Turn your ideas into beautiful, shareable flowcharts using natural language and Mermaid.js.
         </p>
         <button
-          onClick={() => router.push("/generate")}
+          onClick={() => router.push("/login")}
           className="bg-blue-600 hover:cursor-pointer hover:bg-blue-700 text-white px-6 py-3 rounded-lg shadow-lg transition-transform transform hover:scale-105"
         >
           Get Started

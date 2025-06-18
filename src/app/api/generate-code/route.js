@@ -6,14 +6,7 @@ const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY});
 async function generateMermaidCode(prompt) {
   const response = await ai.models.generateContent({
     model: process.env.MODEL_NAME,
-    contents: `You are a Mermaid.js expert. Generate only valid Mermaid code using the "graph LR" syntax. 
-          Follow these strict rules:
-          1. Use only valid Mermaid syntax nodes like [Text], (Text), {Text}, ((Text)), etc.
-          2. Do NOT use parentheses ( ) inside decision nodes { }, as it causes Mermaid parser errors.
-          3. Ensure all node IDs are valid (letters and numbers only).
-          4. Escape or replace any characters that may break Mermaid syntax (like quotes or parentheses in wrong places).
-          Here is the user prompt:
-          "${prompt}"
+    contents: `${process.env.PRE_PROMT}"${prompt}"
           Return only valid and parsable Mermaid syntax.`
   });
   // console.log(extractMermaidCode(response.text));
