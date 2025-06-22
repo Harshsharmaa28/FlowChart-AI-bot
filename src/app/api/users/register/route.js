@@ -1,6 +1,6 @@
-import User from "@/app/models/userModel";
+import User from "@/models/userModel";
 import bcrypt from 'bcrypt';
-import { connect } from "@/app/dbConfig/dbConfig";
+import { connect } from "@/dbConfig/dbConfig";
 
 export async function POST(req){
     const {username,email,password} = await req.json();

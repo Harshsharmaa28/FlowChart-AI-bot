@@ -28,7 +28,7 @@ export default function Home() {
           AI-Powered Flowchart Generator
         </h1>
         <p className="text-lg md:text-xl text-gray-700 text-center max-w-2xl mb-8">
-          Turn your ideas into beautiful, shareable flowcharts using natural language and Mermaid.js.
+          Turn your ideas into beautiful stunning, shareable flowcharts instantly using natural language.
         </p>
         <button
           onClick={() => router.push("/login")}

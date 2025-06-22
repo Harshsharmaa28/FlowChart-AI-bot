@@ -7,6 +7,7 @@ import { X } from "lucide-react";
 import { Download } from 'lucide-react';
 import { Expand } from 'lucide-react';
 import { toast } from "react-toastify";
+import { Loader } from 'lucide-react';
 
 export const PromptBar = () => {
     const [prompt, setPrompt] = useState('');
@@ -14,22 +15,28 @@ export const PromptBar = () => {
     const [loading, setLoading] = useState(false);
     const [svgCode, setSvgCode] = useState(null);
     const [showModal, setShowModal] = useState(false);
+    const [prevPrompt,setprevPrompt] = useState('');
 
     const hostURL = process.env.NEXT_PUBLIC_HOST_URL
     console.log(hostURL)
 
     const handleSubmit = async () => {
+        if(!prompt) return toast.warning("Please Enter Prompt First !");
         setLoading(true);
         try {
+            setprevPrompt(prompt)
             setPrompt('')
             const res = await fetch(`${hostURL}/generate-code`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ prompt }),
             });
-            const data = await res.json();
-            setMermaidCode(data.mermaidCode);
-            setLoading(false);
+            if(res.ok){
+                const data = await res.json();
+                setMermaidCode(data.mermaidCode);
+                setLoading(false);
+            }
+            else toast.error("Server Error Please try again")
         } catch (error) {
             toast.error("Server Error Please try again !")
         }
@@ -49,58 +56,15 @@ export const PromptBar = () => {
         URL.revokeObjectURL(url);
     };
 
-    const downloadPng = async () => {
-        const svgElement = document.querySelector('svg');
-        if (!svgElement) {
-            alert('Diagram not ready');
-            return;
-        }
-
-        const clonedSvg = svgElement.cloneNode(true);
-
-        const allElements = clonedSvg.querySelectorAll('*');
-        const svgStyles = getComputedStyle(svgElement);
-
-        clonedSvg.setAttribute('width', svgStyles.width);
-        clonedSvg.setAttribute('height', svgStyles.height);
-
-        allElements.forEach(el => {
-            const style = getComputedStyle(el);
-            el.setAttribute('style', `
-          fill: ${style.fill};
-          stroke: ${style.stroke};
-          stroke-width: ${style.strokeWidth};
-          font-family: ${style.fontFamily};
-          font-size: ${style.fontSize};
-        `);
-        });
-
-        const svgString = new XMLSerializer().serializeToString(clonedSvg);
-
-        const canvas = document.createElement('canvas');
-        canvas.width = 1200;
-        canvas.height = 800;
-        const ctx = canvas.getContext('2d');
-
-        const v = await Canvg.from(ctx, svgString);
-        await v.render();
-
-        const pngUrl = canvas.toDataURL('image/png');
-        const a = document.createElement('a');
-        a.href = pngUrl;
-        a.download = 'diagram.png';
-        a.click();
-    };
-
     return (
         <div className="max-w-4xl mx-auto p-6 h-screen flex flex-col justify-between">
             <div className="flex-1 flex flex-col">
                 <h1 className="text-3xl font-semibold text-gray-800 dark:text-gray-200 mb-6">Flowchart Generator</h1>
                 {mermaidCode ? (
                     <div className="flex-1 flex flex-col">
-                        <h2 className="text-md font-medium text-gray-700 dark:text-gray-300 mb-2">Prompt: <span className="italic">{prompt}</span></h2>
+                        <h2 className="text-md font-medium text-gray-700 dark:text-gray-300 mb-2">Prompt: <span className="italic">{prevPrompt}</span></h2>
 
-                        <div className="bg-white dark:bg-gray-800 shadow-md p-4 rounded-xl border dark:border-gray-700">
+                        <div className="bg-white overflow-scroll max-h-[450px] dark:bg-gray-800 shadow-md p-4 rounded-xl border dark:border-gray-700">
                             <Diagram code={mermaidCode} onSvgGenerated={setSvgCode} />
                             <div className="flex gap-4 mt-4 text-gray-600 dark:text-gray-300">
                                 <Download onClick={downloadSvg} className="cursor-pointer hover:text-black dark:hover:text-white" />
@@ -109,7 +73,7 @@ export const PromptBar = () => {
                         </div>
                     </div>
                 ) : (
-                    <div className="flex items-center justify-center h-[500px] text-gray-400 text-lg border border-dashed border-gray-300 rounded-xl bg-gray-50 dark:bg-gray-900 dark:border-gray-700">
+                    <div className="flex items-center justify-center h-[450px] text-gray-400 text-lg border border-dashed border-gray-300 rounded-xl bg-gray-50 dark:bg-gray-900 dark:border-gray-700">
                         Your flowchart will appear here
                     </div>
                 )}
@@ -134,9 +98,9 @@ export const PromptBar = () => {
                 <button
                     onClick={handleSubmit}
                     disabled={loading}
-                    className="absolute bottom-4 right-4 bg-black hover:cursor-pointer hover:bg-gray-800 text-white px-4 py-2 rounded-full shadow transition"
+                    className="absolute bottom-[25px] right-4 bg-black hover:cursor-pointer hover:bg-gray-800 text-white px-4 py-2 rounded-full shadow transition"
                 >
-                    {loading ? 'Generating...' : <ArrowUp />}
+                    {loading ? <Loader/> : <ArrowUp />}
                 </button>
             </div>
         </div>

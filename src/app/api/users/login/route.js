@@ -1,6 +1,8 @@
-import User from '@/app/models/userModel'
+import User from '@/models/userModel'
 import bcrypt from 'bcrypt';
-import { connect } from '@/app/dbConfig/dbConfig';
+import { connect } from '@/dbConfig/dbConfig';
+import jwt  from "jsonwebtoken";
+import { NextResponse } from 'next/server';
 
 export async function POST(req) {
     try {
@@ -8,38 +10,59 @@ export async function POST(req) {
         await connect();
     
         if(!email || !password){
-            return new Response(JSON.stringify({error: "Please fill all the feilds"}),{
-                status: 400,
-                headers: {'Content-type':'Application/json'}
+            return NextResponse.json({
+                message:"Please fill all the feilds",
+                success: false,
             })
         }
     
         const user = await User.findOne({email});
     
         if(!user){
-            return new Response(JSON.stringify({error:"User does not exsist"}),{
-                status: 404,
-                headers:{'Content-type':'Application/json'},
+            return NextResponse.json({
+                message:"User does not exsist",
+                success: false,
             })
         }
     
         const isMatch = await bcrypt.compare(password,user.password);
     
         if(!isMatch){
-            return new Response(JSON.stringify({error:"Incorrect Password Please Enter correct password"}),{
-                status: 400,
-                headers: {'Content-type':'Application/json'},
+            return NextResponse.json({
+                message:"Incorrect Password Please Enter correct password",
+                success:false,
             })
         }
-    
-        return new Response(JSON.stringify({message:"Login successful", user: user}),{
-            status: 200,
-            headers:{'Content-type':'Application/json'}
-        });
+
+        const tokenData ={
+            id: user._id,
+            username: user.username,
+            email: user.email,
+        }
+
+        if (!process.env.TOKEN_SECRET) {
+            return NextResponse.json({
+                message:"TOKEN_SECRET is not set in environment",
+                success: false,
+            })
+        }
+
+        const token = await jwt.sign(tokenData,process.env.TOKEN_SECRET,{expiresIn:'5h'});
+        
+        const response = NextResponse.json({
+            message:"Login successfully",
+            success: true,
+        })
+
+        response.cookies.set("token",token,{
+            httpOnly: true,
+        })
+        
+        return response;
     } catch (error) {
-        return new Response(JSON.stringify({message:error}),{
-            status:400,
-            headers:{'Content-type':'Application/json'}
+        return NextResponse.json({
+            message: error.message,
+            success: false,
         })
     }
 }

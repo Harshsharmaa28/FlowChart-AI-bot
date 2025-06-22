@@ -26,7 +26,7 @@ export default function Diagram({ code, onSvgGenerated }) {
 
   return (
     <div>
-      <div className='border-black p-2' dangerouslySetInnerHTML={{ __html: svgCode }} />
+      <div className='border-black p-2 w-screen ' dangerouslySetInnerHTML={{ __html: svgCode }} />
     </div>
   );
 }

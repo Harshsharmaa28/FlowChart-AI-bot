@@ -72,3 +72,7 @@ body {
 .float-animate-5 {
   animation: float1 20s infinite ease-in-out;
 }
+
+::-webkit-scrollbar {
+  display: none;
+}
