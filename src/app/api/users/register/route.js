@@ -2,36 +2,36 @@ import User from "@/models/userModel";
 import bcrypt from 'bcrypt';
 import { connect } from "@/dbConfig/dbConfig";
 
-export async function POST(req){
-    const {username,email,password} = await req.json();
+export async function POST(req) {
+    const { username, email, password } = await req.json();
     await connect();
 
-    console.log(username,email,password)
+    console.log(username, email, password)
 
-    if(!username || !email || !password){
-        return new Response(JSON.stringify({error: "Please fill all the feilds"}),{
+    if (!username || !email || !password) {
+        return new Response(JSON.stringify({ error: "Please fill all the feilds" }), {
             status: 400,
-            headers: {'Content-type':'Application/json'}
+            headers: { 'Content-type': 'Application/json' }
         })
     }
 
-    const isUserExist = await User.findOne({email});
+    const isUserExist = await User.findOne({ email });
 
-    if(isUserExist){
-        return new Response(JSON.stringify({error:"User already Exist"}),{
-            status:400,
-            headers:{'Content-type':'Application/json'}
+    if (isUserExist) {
+        return new Response(JSON.stringify({ error: "User already Exist" }), {
+            status: 400,
+            headers: { 'Content-type': 'Application/json' }
         });
     }
 
-    const hashedPassword = await bcrypt.hash(password,10);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    const newUser = new User({username,email,password: hashedPassword});
+    const newUser = new User({ username, email, password: hashedPassword });
     await newUser.save();
 
-    return new Response(JSON.stringify({message:"User registered Successfully"}),{
-        status:200,
-        headers: {'Content-type':'Application/json'}
+    return new Response(JSON.stringify({ message: "User registered Successfully" }), {
+        status: 200,
+        headers: { 'Content-type': 'Application/json' }
     });
 
 }

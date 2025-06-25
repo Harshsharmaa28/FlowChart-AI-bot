@@ -20,22 +20,23 @@ export default function RegisterPage() {
         toast.error("Please fill in all fields.");
         return;
       }
-      const data = {username:name,email,password};
-      const response = await fetch(`${hostURL}/users/register`,{
-        method:"POST",
-        headers:{
-          'Content-Type':'application/json'
+      const data = { username: name, email, password };
+      const response = await fetch(`${hostURL}/users/register`, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(data),
+        credentials: 'include'
       })
       console.log(response)
-      if(response.ok){
+      if (response.ok) {
         setName('');
         setEmail('');
         setPassword('');
         toast.success("Account created! Please log in.");
         router.push("/login");
-        
+
       }
       else toast.error("Some Error occured")
     } catch (err) {
@@ -47,7 +48,7 @@ export default function RegisterPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#e0f7fa] via-[#ffffff] to-[#f3e5f5] animate-gradient-x bg-[length:400%_400%] px-4">
-      <ToastContainer/>
+      <ToastContainer />
       <style>{`
         @keyframes gradient-x {
           0% { background-position: 0% 50%; }
