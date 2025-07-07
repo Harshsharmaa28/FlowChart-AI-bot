@@ -12,7 +12,7 @@ export async function POST(req) {
         return new Response(JSON.stringify({ error: "Please fill all the feilds" }), {
             status: 400,
             headers: { 'Content-type': 'Application/json' }
-        })
+        },{status:401})
     }
 
     const isUserExist = await User.findOne({ email });
@@ -21,7 +21,7 @@ export async function POST(req) {
         return new Response(JSON.stringify({ error: "User already Exist" }), {
             status: 400,
             headers: { 'Content-type': 'Application/json' }
-        });
+        },{status:401});
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);

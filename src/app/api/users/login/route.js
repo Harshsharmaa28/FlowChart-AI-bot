@@ -13,7 +13,7 @@ export async function POST(req) {
             return NextResponse.json({
                 message: "Please fill all the feilds",
                 success: false,
-            })
+            },{status:401})
         }
 
         const user = await User.findOne({ email });
@@ -22,7 +22,7 @@ export async function POST(req) {
             return NextResponse.json({
                 message: "User does not exsist",
                 success: false,
-            })
+            },{status:401})
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
@@ -31,7 +31,7 @@ export async function POST(req) {
             return NextResponse.json({
                 message: "Incorrect Password Please Enter correct password",
                 success: false,
-            })
+            },{status:401});
         }
 
         const tokenData = {
@@ -44,7 +44,7 @@ export async function POST(req) {
             return NextResponse.json({
                 message: "TOKEN_SECRET is not set in environment",
                 success: false,
-            })
+            },{status:401})
         }
 
         const token = jwt.sign(tokenData, process.env.TOKEN_SECRET, {
@@ -68,6 +68,6 @@ export async function POST(req) {
         return NextResponse.json({
             message: error.message,
             success: false,
-        })
+        },{status:401})
     }
 }

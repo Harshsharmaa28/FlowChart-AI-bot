@@ -21,6 +21,6 @@ export async function GET(){
         return NextResponse.json({
             message: error,
             success: false,
-        })
+        },{status:401})
     }
 }

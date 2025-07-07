@@ -18,7 +18,6 @@ export const PromptBar = () => {
     const [prevPrompt,setprevPrompt] = useState('');
 
     const hostURL = process.env.NEXT_PUBLIC_HOST_URL
-    console.log(hostURL)
 
     const handleSubmit = async () => {
         if(!prompt) return toast.warning("Please Enter Prompt First !");
@@ -60,7 +59,7 @@ export const PromptBar = () => {
     return (
         <div className="max-w-4xl mx-auto p-6 h-screen flex flex-col justify-between">
             <div className="flex-1 flex flex-col">
-                <h1 className="text-3xl font-semibold text-gray-800 dark:text-gray-200 mb-6">Flowchart Generator</h1>
+                <h1 className=" text-2xl sm:text-3xl font-semibold text-gray-800 dark:text-gray-200 mb-6">Flowchart Generator</h1>
                 {mermaidCode ? (
                     <div className="flex-1 flex flex-col">
                         <h2 className="text-md font-medium text-gray-700 dark:text-gray-300 mb-2">Prompt: <span className="italic">{prevPrompt}</span></h2>
@@ -88,7 +87,7 @@ export const PromptBar = () => {
                     </div>
                 )}
             </div>
-            <div className="mt-6 relative">
+            <div className="relative">
                 <textarea
                     className="w-full resize-none p-4 pr-20 rounded-2xl shadow-inner border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                     rows={2}
